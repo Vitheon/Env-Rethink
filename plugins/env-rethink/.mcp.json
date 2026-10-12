@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "workspace_env": {
+      "command": "env-rethink-context",
+      "args": ["serve"],
+      "env_vars": ["ENV_RETHINK_BUNDLE"]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "env-rethink",
+  "version": "0.1.0",
+  "description": "Navigate workspace collection maps and public event logs through read-only MCP tools.",
+  "author": {
+    "name": "YYJ6666"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Env Rethink",
+    "shortDescription": "Use Env Rethink in Codex.",
+    "longDescription": "Prepare and connect reviewed Env-Rethink context, then navigate files with workspace_map, workspace_search and event_search.",
+    "developerName": "theseus-labs-rsi",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Help me use Env Rethink."
+  },
+  "mcpServers": "./.mcp.json"
+}
