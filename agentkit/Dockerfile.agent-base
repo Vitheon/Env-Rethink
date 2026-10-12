@@ -20,6 +20,7 @@ FROM ${TB_AGENT_BASE_FROM}
 
 ARG CLAUDE_CODE_VERSION=2.1.187
 ARG CODEX_VERSION=0.157.0
+ARG DSH_SDK_VERSION=0.1.0rc7
 ARG NPM_REGISTRY=https://registry.npmjs.org/
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -44,6 +45,10 @@ ENV TB_AGENT_HOME=/opt/tb-agent \
     NPM_CONFIG_AUDIT=false
 
 RUN mkdir -p /opt/tb-agent/node /opt/tb-agent/codex-home /opt/tb-agent/cache
+
+# Pure Python SDK + bundled native runtime travel with /opt/tb-agent overlays.
+RUN python3 -m pip install --no-cache-dir --target /opt/tb-agent/dsh \
+        "deepseek-harness-sdk==${DSH_SDK_VERSION}"
 
 # 全局装到 /opt/tb-agent/node 下（不用 /usr/local 是为了不污染题目镜像自带的 node_modules）
 RUN npm install --global --prefix /opt/tb-agent/node \

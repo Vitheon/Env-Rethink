@@ -164,6 +164,8 @@ async def _run_async(*, prompt, work_dir, sandbox_dir, timeout_s, api_provider, 
     )
 
     kind = _pick_kind(api_provider, os.environ.get("WS_AGENT_KIND", ""))
+    if kind.lower() in {"dsh", "deepseekharness", "deepseek-harness", "deepseek_harness"} and os.environ.get("WORKSPACE_BENCH_MCP_URL"):
+        raise ValueError("DSH minimal profile does not support workspace_env MCP")
     base_url, api_key, model, effort = _connection(api_provider, kind)
     gateway = resolve_gateway(
         base_url=base_url, api_key=api_key, model=model,

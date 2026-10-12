@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import json
 import time
+from pathlib import Path
 
 from dataclasses import dataclass, field
 from typing import Any
@@ -278,6 +279,55 @@ class CodexHarness(AgentHarness):
         return res
 
 
+class DeepSeekHarness(AgentHarness):
+    """The official DSH SDK's unattended minimal agent, inside this container."""
+
+    name = "dsh"
+
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        if self.gateway.protocol != "openai-chat":
+            raise ValueError("DSH requires openai-chat protocol")
+        if self.extra_cli_args:
+            raise ValueError("DSH SDK does not accept extra CLI arguments")
+
+    async def run(self, runtime: DockerRuntime, prompt: str) -> AgentResult:
+        source = Path(__file__).resolve().parents[1] / "workspace_eval/src/agents/dsh_runtime"
+        await runtime.mkdirs(f"{self.log_dir}/dsh-runtime")
+        for filename in ("runner.py", "minimal.cordis.yml", "LICENSE"):
+            await runtime.put_text(f"{self.log_dir}/dsh-runtime/{filename}",
+                                   (source / filename).read_text(encoding="utf-8"))
+        return await super().run(runtime, prompt)
+
+    def command(self, prompt_path: str) -> str:
+        return (
+            f"python3 {_sh_quote(self.log_dir + '/dsh-runtime/runner.py')} "
+            f"--prompt-file {_sh_quote(prompt_path)} --workdir {_sh_quote(self.workdir)} "
+            f"--state-dir {_sh_quote(self.log_dir)} --timeout {float(self.timeout)} "
+            f"2>&1 | tee {_sh_quote(self.log_dir + '/dsh.log')}\n"
+        )
+
+    def parse(self, *, runtime_out: str, rc: int, duration: float, log_path: str) -> AgentResult:
+        result = AgentResult(agent=self.name, status="error", return_code=rc,
+                             duration=duration, log_path=log_path)
+        for line in reversed(runtime_out.splitlines()):
+            try:
+                event = json.loads(line)
+            except ValueError:
+                continue
+            if not isinstance(event, dict) or event.get("type") != "dsh.result":
+                continue
+            if rc == 0 and event.get("status") == "ok" and event.get("finishReason") == "completed":
+                result.status = "ok"
+            result.last_message = str(event.get("lastText") or "")
+            result.error = str(event.get("error") or ("" if result.status == "ok" else f"DSH exited with rc={rc}"))
+            result.extra = {"finish_reason": event.get("finishReason"), "sdk_version": event.get("sdkVersion")}
+            break
+        else:
+            result.error = "No DSH completion event: " + runtime_out[-1500:]
+        return result
+
+
 def build_harness(
     agent: str,
     *,
@@ -300,4 +350,6 @@ def build_harness(
         return ClaudeCodeHarness(**common)
     if name == "codex":
         return CodexHarness(wire_api=wire_api, **common)
+    if name == "dsh":
+        return DeepSeekHarness(**common)
     raise ValueError(f"未知 agent：{agent}")

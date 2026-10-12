@@ -57,7 +57,7 @@ def resolve_gateway(
     protocol:
       anthropic        —— claude code 用（base 去掉尾部 /v1）
       openai-responses —— codex 用，wire_api=responses
-      openai-chat      —— codex 用，wire_api=chat
+      openai-chat      —— DSH 的 DeepSeek Chat Completions
     """
     base = (base_url or "").strip().rstrip("/")
     key = (api_key or "").strip()
@@ -98,15 +98,18 @@ def gateway_from_env(
 
 
 def agent_protocol(agent: str) -> str:
-    """哪个 agent 用哪个协议。claude code 只会说 Anthropic Messages；codex 说 Responses。"""
+    """Claude Code: Messages; Codex: Responses; DSH: Chat Completions."""
     key = agent.strip().lower()
     if key in ("claude", "claude_code", "claude-code", "claudecode"):
         return "anthropic"
     if key in ("codex",):
         return "openai-responses"
-    raise ValueError(f"未知 agent：{agent!r}（支持 claude_code / codex）")
+    if key in ("dsh", "deepseekharness", "deepseek-harness", "deepseek_harness"):
+        return "openai-chat"
+    raise ValueError(f"未知 agent：{agent!r}（支持 claude_code / codex / dsh）")
 
 
 def canonical_agent(agent: str) -> str:
     key = agent.strip().lower()
-    return "claude_code" if key in ("claude", "claude_code", "claude-code", "claudecode") else "codex"
+    protocol = agent_protocol(key)  # Do not silently turn typos into Codex.
+    return {"anthropic": "claude_code", "openai-responses": "codex", "openai-chat": "dsh"}[protocol]

@@ -1,7 +1,9 @@
 # agentkit —— 各模块共用的 agent 运行时
 
-**在一个 docker 容器里跑 claude code 或 codex**，并把它需要的接线（模型端点、容器路径、
+**在一个 docker 容器里跑 claude code、codex 或 DSH**，并把它需要的接线（模型端点、容器路径、
 运行时镜像）都封好。四个模块共用这一层，所以"跑 agent"只有一处实现。
+
+DSH 的版本、协议、镜像限制和用法见 [DSH 接入说明](../workspace_eval/docs/dsh.md)。
 
 ```python
 from agentkit import DockerRuntime, FileItem, build_harness, gateway_from_env

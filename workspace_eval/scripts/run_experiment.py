@@ -68,6 +68,7 @@ CONDITIONS = ("clean", "noise", "curated", "task_files")
 # 需要角色 noisy workspace 作为基座的条件（其余条件用空角色种子 / common 镜像）。
 ROLE_WORKSPACE_CONDITIONS = ("noise", "curated")
 REASONING_EFFORTS = {
+    "off",
     "no_think",
     "none",
     "minimal",
@@ -575,6 +576,7 @@ def _model_config(raw: object, *, default_effort: str) -> dict[str, Json]:
     preset["max_output_tokens"] = max(
         1, int(raw.get("max_output_tokens") or 32768)
     )
+    preset["dsh_context_tokens"] = max(1, int(raw.get("dsh_context_tokens") or 1000000))
     # 模型真实上下文窗口（token）。自建/第三方端点必须显式声明：这些网关会在流式
     # 响应里丢掉 cache usage 字段，Claude Code 的上下文核算只看到未缓存的那一段，
     # 于是 autocompact 永不触发、对话一直涨到模型的真实上限才 500/400。
@@ -636,12 +638,16 @@ def _agent_harness(config: dict[str, Json]) -> str:
         "claude-code": "ClaudeCode",
         "claude_code": "ClaudeCode",
         "agentkit": "agentkit",
+        "dsh": "DeepSeekHarness",
+        "deepseekharness": "DeepSeekHarness",
+        "deepseek-harness": "DeepSeekHarness",
+        "deepseek_harness": "DeepSeekHarness",
     }
     selected = aliases.get(str(raw).strip().lower())
     if selected is None:
         raise SystemExit(
             f"unsupported local agent harness: {raw!r}; "
-            "choose Codex, ClaudeCode or agentkit"
+            "choose Codex, ClaudeCode, DeepSeekHarness or agentkit"
         )
     return selected
 
@@ -655,6 +661,7 @@ def _api_provider(model: dict[str, Json]) -> dict[str, Json]:
         "wireApi": model["wire_api"],
         "reasoningEffort": model["reasoning_effort"],
         "maxOutputTokens": model["max_output_tokens"],
+        "dshContextTokens": model.get("dsh_context_tokens", 1000000),
         "parallelToolCalls": bool(model["parallel_tool_calls"]),
         "apiRetryMaxAttempts": model["api_retry_max_attempts"],
         "apiRetryInitialDelaySec": 1.0,

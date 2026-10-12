@@ -302,7 +302,7 @@ def _gateway_opts(p: argparse.ArgumentParser) -> None:
 def _common(p: argparse.ArgumentParser) -> None:
     _gateway_opts(p)
     _data_opts(p)
-    p.add_argument("--agent", default="claude_code", help="claude_code | codex")
+    p.add_argument("--agent", default="claude_code", help="claude_code | codex | dsh")
     p.add_argument("--mode", default="agent", choices=["agent", "oracle"])
     p.add_argument("--attempts", type=int, default=1)
     p.add_argument("--concurrency", type=int, default=4)

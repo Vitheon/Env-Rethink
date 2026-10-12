@@ -19,6 +19,7 @@ from .agents import (
     AgentResult,
     ClaudeCodeHarness,
     CodexHarness,
+    DeepSeekHarness,
     build_harness,
 )
 from .docker_runtime import (
@@ -53,7 +54,7 @@ __all__ = [
     "DockerRuntime", "FileItem", "CommandResult", "DownloadResponse",
     "read_local_directory_to_file_items",
     # agent
-    "build_harness", "AgentHarness", "AgentResult", "ClaudeCodeHarness", "CodexHarness",
+    "build_harness", "AgentHarness", "AgentResult", "ClaudeCodeHarness", "CodexHarness", "DeepSeekHarness",
     # 接线
     "Gateway", "resolve_gateway", "gateway_from_env", "agent_protocol", "canonical_agent",
     "CONTAINER",

@@ -12,7 +12,7 @@
 # The build context is `workspace_eval/` (as set in the compose file), so every
 # COPY source below is relative to that directory. Container-internal paths keep
 # the upstream `evaluation/` naming so the runtime mounts and env vars still line
-# up. Removed relative to upstream: the deepagents/openclaw/dsh harness runtimes
+# up. Removed relative to upstream: the deepagents/openclaw harness runtimes
 # and the Office/mail skill trees that this checkout does not ship.
 
 FROM node:24-bookworm-slim
@@ -82,6 +82,7 @@ COPY pyproject.toml uv.lock .python-version /opt/workspace-bench/evaluation/
 RUN uv sync \
       --project /opt/workspace-bench/evaluation \
       --frozen \
+      --group dsh \
       --group download \
       --group parsing
 
