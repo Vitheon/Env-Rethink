@@ -1,0 +1,6 @@
+{
+  "name": "env-rethink",
+  "version": "0.1.0",
+  "description": "Navigate workspace collection maps and public event logs through read-only MCP tools.",
+  "author": {"name": "YYJ6666"}
+}

@@ -1,0 +1,9 @@
+{
+  "name": "env-rethink-local",
+  "metadata": {"description": "Env-Rethink workspace context integration for coding agents."},
+  "owner": {"name": "theseus-labs-rsi"},
+  "plugins": [
+    {"name": "env-rethink", "source": "./plugins/env-rethink",
+     "description": "Read-only workspace collection maps and public event logs."}
+  ]
+}

@@ -59,6 +59,14 @@ Category means use available pairs with nonzero seed success.
 
 ## Quick Start
 
+### Use Collection Maps and Event Logs in Codex / Claude Code
+
+For everyday workspaces, the [client integration guide](integrations/README.md)
+provides a local MCP plugin, setup/usage skills, and a no-API demo. Install with
+`python -m pip install -e .` in a separate Python 3.11/3.12 virtual environment,
+import reviewed public artifacts, and run `env-rethink-context doctor` before
+connecting either client. No Docker is needed for this read-only integration.
+
 ### Prerequisites
 
 - **Python 3.11 or 3.12**, matching the `envgen` package constraints.
