@@ -94,7 +94,7 @@ export TB_BASE_URL=... TB_API_KEY=... TB_MODEL=...    # 模型连接（api_provi
 | `scripts/run_strict_task_config.py` | 起严格 allowlist 容器 |
 | `src/agent_runner.py` | agent 执行核心（准备 workspace → 跑 agent → 收产物） |
 | `src/task_container_entry.py` | 容器内 entrypoint |
-| `src/agents/` | harness 适配器（`claudecode` / `codex` / `agentkit`） |
+| `src/agents/` | harness 适配器（`claudecode` / `codex` / `deepseekharness` / `agentkit`）；[DSH 用法](docs/dsh.md) |
 | `src/agent_as_a_judge.py` `src/agent_eval.py` | rubric 判分 |
 | `src/workspace_services/` | workspace 服务 sidecar（WeCom / mail 等） |
 | `docker/` | harness 容器（Office 镜像） |

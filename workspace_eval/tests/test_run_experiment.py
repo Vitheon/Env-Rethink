@@ -60,6 +60,11 @@ class ExperimentRegressionTests(unittest.TestCase):
     def test_harness_selection_is_written_to_real_case_config(self):
         path = self.prepared.suite_root / "configs" / f"{self.case.case_id}.yaml"
         self.assertEqual(yaml.safe_load(path.read_text())['agent_name'], "ClaudeCode")
+        for alias in ("dsh", "DeepSeekHarness", "deepseek-harness"):
+            self.prepared.config['agent']['harness'] = alias
+            runner._write_case_configs(self.prepared, {"1": {"file_system": "dataseed"}}, Path(self.temp.name))
+            self.assertEqual(yaml.safe_load(path.read_text())['agent_name'], "DeepSeekHarness")
+        self.prepared.config['agent']['harness'] = "ClaudeCode"
         del self.prepared.config['agent']['harness']
         self.prepared.config['harness'] = "claude-code"
         runner._write_case_configs(self.prepared, {"1": {"file_system": "dataseed"}}, Path(self.temp.name))

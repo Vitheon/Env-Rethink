@@ -402,7 +402,7 @@ def _pack(raw: bytes) -> dict[str, Any]:
 
 async def collect(runtime: DockerRuntime, *, log=print) -> dict[str, Any]:
     paths = [f"{VERIFIER_DIR}/{n}" for n in VERIFIER_ARTIFACTS]
-    paths += [f"{AGENT_LOGS}/{n}" for n in ("claude_code.log", "codex.log", "gwshim.log")]
+    paths += [f"{AGENT_LOGS}/{n}" for n in ("claude_code.log", "codex.log", "dsh.log", "gwshim.log")]
     resp = await runtime.download_file([FileItem(path=p, encoding="base64") for p in paths])
     out: dict[str, Any] = {}
     for item in resp.files:

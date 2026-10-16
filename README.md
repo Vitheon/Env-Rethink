@@ -229,6 +229,7 @@ The model curator labels files in batches, materializes a selected workspace wit
 | Guide | Topics |
 |---|---|
 | [Shared Agent Runtime](agentkit/README.md) | Docker execution, Codex/Claude Code, model connections, image overlays |
+| [DeepSeek Harness](workspace_eval/docs/dsh.md) | DSH minimal agent, pinned SDK, container execution, protocol and scope |
 | [Task Hardening](hardening/README.md) | Seed evaluation, variant generation, validation gates, operational limits |
 | [Environment Generation](envgen/README.md) | Event logs, collection maps, public/private artifacts, configuration |
 | [Porting to a New Benchmark](envgen/docs/PORTING.md) | Workspace preparation and integration steps |

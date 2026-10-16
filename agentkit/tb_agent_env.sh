@@ -6,7 +6,7 @@
 #   2) 管线：runtime/localbase/agents.py 生成的启动脚本里 source 本文件
 #
 # 输入（都由宿主注入，不烘进镜像，凭据不进层）：
-#   TB_AGENT_MODEL_PROTOCOL   anthropic | openai-responses
+#   TB_AGENT_MODEL_PROTOCOL   anthropic | openai-responses | openai-chat
 #   TB_AGENT_BASE_URL         模型网关地址
 #   TB_AGENT_API_KEY          Bearer 后面的整串凭据
 #   TB_AGENT_MODEL            模型 marker
@@ -20,7 +20,7 @@ export PATH="/opt/tb-agent/node/bin:${PATH}"
 export CODEX_HOME="${CODEX_HOME:-/opt/tb-agent/codex-home}"
 export IS_SANDBOX="${IS_SANDBOX:-1}"
 
-: "${TB_AGENT_MODEL_PROTOCOL:?需要 TB_AGENT_MODEL_PROTOCOL=anthropic|openai-responses}"
+: "${TB_AGENT_MODEL_PROTOCOL:?需要 TB_AGENT_MODEL_PROTOCOL=anthropic|openai-responses|openai-chat}"
 : "${TB_AGENT_BASE_URL:?需要 TB_AGENT_BASE_URL}"
 : "${TB_AGENT_API_KEY:?需要 TB_AGENT_API_KEY}"
 : "${TB_AGENT_MODEL:?需要 TB_AGENT_MODEL}"
@@ -78,6 +78,13 @@ case "$TB_AGENT_MODEL_PROTOCOL" in
   openai-responses)
     export CODEX_API_KEY="$TB_AGENT_API_KEY"
     export OPENAI_API_KEY="$TB_AGENT_API_KEY"
+    ;;
+  openai-chat)
+    export DEEPSEEK_API_KEY="$TB_AGENT_API_KEY"
+    export DEEPSEEK_BASE_URL="$TB_AGENT_BASE_URL"
+    export DSH_MODEL="$TB_AGENT_MODEL"
+    export DSH_REASONING_EFFORT="${TB_AGENT_REASONING_EFFORT:-high}"
+    export PYTHONPATH="/opt/tb-agent/dsh${PYTHONPATH:+:$PYTHONPATH}"
     ;;
   *)
     echo "未知的 TB_AGENT_MODEL_PROTOCOL: $TB_AGENT_MODEL_PROTOCOL" >&2

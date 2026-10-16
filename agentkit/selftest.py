@@ -72,7 +72,7 @@ async def check(agent: str, *, base_url: str, api_key: str, model: str,
 
 async def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--agent", default="both", choices=["claude_code", "codex", "both"])
+    ap.add_argument("--agent", default="both", choices=["claude_code", "codex", "dsh", "both"])
     ap.add_argument("--base-url", default="")
     ap.add_argument("--api-key", default="")
     ap.add_argument("--model", default="")
